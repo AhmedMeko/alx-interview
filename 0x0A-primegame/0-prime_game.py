@@ -1,28 +1,44 @@
 #!/usr/bin/python3
-"""Module to determine the winner of a prime game session"""
+"""
+Define isWineer function, a solution to the Prime Game problem
+"""
+
+
+def primes(n):
+    """Return list of prime numbers between 1 and n inclusive
+       Args:
+        n (int): upper boundary of range. lower boundary is always 1
+    """
+    prime = []
+    sieve = [True] * (n + 1)
+    for p in range(2, n + 1):
+        if (sieve[p]):
+            prime.append(p)
+            for i in range(p, n + 1, p):
+                sieve[i] = False
+    return prime
 
 
 def isWinner(x, nums):
-    """Determine the winner of a prime game session"""
-    if x < 1 or not nums:
+    """
+    Determines winner of Prime Game
+    Args:
+        x (int): no. of rounds of game
+        nums (int): upper limit of range for each round
+    Return:
+        Name of winner (Maria or Ben) or None if winner cannot be found
+    """
+    if x is None or nums is None or x == 0 or nums == []:
         return None
-    max_num = max(nums)
-    primes = [True] * (max_num + 1)
-    primes[0] = primes[1] = False
-    for i in range(2, int(max_num**0.5) + 1):
-        if primes[i]:
-            for j in range(i*i, max_num + 1, i):
-                primes[j] = False
-    mariaw, benw = 0, 0
-    for nless in nums:
-        primes_count = sum(1 for prime in primes[:nless + 1] if prime)
-        if primes_count % 2 == 1:
-            mariaw += 1
+    Maria = Ben = 0
+    for i in range(x):
+        prime = primes(nums[i])
+        if len(prime) % 2 == 0:
+            Ben += 1
         else:
-            benw += 1
-    if mariaw == benw:
-        return None
-    elif mariaw > benw:
+            Maria += 1
+    if Maria > Ben:
         return 'Maria'
-    else:
+    elif Ben > Maria:
         return 'Ben'
+    return None
